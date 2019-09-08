@@ -1,0 +1,13 @@
+build
+dist
+fonts
+test
+docs
+*.pyc
+*.egg-info
+*.pid
+*.pdf
+*.zip
+*.cbr
+*.cbz
+*.png

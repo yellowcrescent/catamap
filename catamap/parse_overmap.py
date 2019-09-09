@@ -25,7 +25,8 @@ import json
 import logging
 
 from catamap.gamedata import GameData
-from catamap.colors import colorize
+from catamap.colors import colorize_ansi, translate_color
+from catamap.render import OvermapTileImage
 from catamap import __version__, __date__
 
 logger = logging.getLogger('catamap')
@@ -301,10 +302,32 @@ class OvermapTile(object):
         outstr = ""
         for y in range(OMT_SZ):
             for x in range(OMT_SZ):
-                # TODO: add ANSI color
-                outstr += colorize(omap[y][x][0], omap[y][x][1])
+                outstr += colorize_ansi(omap[y][x][0], omap[y][x][1])
             outstr += '\n'
         return outstr
+
+    def render_overmap_imgtext(self, fontpath, fontsize=24, fpadding=0, z=0):
+        """
+        Returns an  PIL Image object of overmap text rendered into an image
+        """
+        omap = self.get_overmap(z)
+        oti = OvermapTileImage(OMT_SZ, OMT_SZ, fontpath=fontpath, fontsize=fontsize, fpadding=fpadding)
+
+        line_syms = [x[0] for x in ULINES.values()]
+
+        for y in range(OMT_SZ):
+            for x in range(OMT_SZ):
+                try:
+                    t_fg, t_bg = translate_color(omap[y][x][1], 'rgb')
+                except:
+                    t_fg = (255, 255, 255)
+                    t_bg = None
+                t_sym = omap[y][x][0]
+                if t_sym in line_syms:
+                    t_bg = None
+                    logger.debug("unset t_bg for line_sym match")
+                oti.plot_tile(x, y, t_sym, t_fg, t_bg)
+        return oti
 
 class SubmapTile(object):
     """

@@ -71,6 +71,10 @@ def _main():
     otile = OvermapTile(0, 0, '/opt/CataclysmDDA/tiles/userdata.debug/save/OMTest/o.0.0')
     otile.resolve_symbols(gdata)
     print(otile.render_overmap_ansi())
+    #oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/fonts/ofl/inconsolata/Inconsolata-Regular.ttf', fontsize=24)
+    #oimg = otile.render_overmap_imgtext('/opt/CataclysmDDA/tiles/cataclysmdda-0.D-9579/data/font/unifont.ttf', fontsize=24)
+    oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/consola.ttf', fontsize=24, fpadding=4)
+    oimg.save_image('oimg.png')
     #World(savepath, gdata)
     ###
 

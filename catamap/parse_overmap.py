@@ -324,9 +324,12 @@ class OvermapTile(object):
                     t_bg = None
                 t_sym = omap[y][x][0]
                 if t_sym in line_syms:
+                    t_line = True
                     t_bg = None
                     logger.debug("unset t_bg for line_sym match")
-                oti.plot_tile(x, y, t_sym, t_fg, t_bg)
+                else:
+                    t_line = False
+                oti.plot_tile(x, y, t_sym, t_fg, t_bg, t_line)
         return oti
 
 class SubmapTile(object):

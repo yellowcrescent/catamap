@@ -73,7 +73,8 @@ def _main():
     print(otile.render_overmap_ansi())
     #oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/fonts/ofl/inconsolata/Inconsolata-Regular.ttf', fontsize=24)
     #oimg = otile.render_overmap_imgtext('/opt/CataclysmDDA/tiles/cataclysmdda-0.D-9579/data/font/unifont.ttf', fontsize=24)
-    oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/consola.ttf', fontsize=24, fpadding=4)
+    #oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/consola.ttf', fontsize=24, fpadding=4)
+    oimg = otile.render_overmap_imgtext('/home/jacob/jfonts/fira/Fira_Mono_3_2/Fonts/FiraMono_OTF_32/FiraMono-Regular.otf', fontsize=24, fpadding=0)
     oimg.save_image('oimg.png')
     #World(savepath, gdata)
     ###

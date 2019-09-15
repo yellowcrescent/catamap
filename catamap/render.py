@@ -30,10 +30,13 @@ class OvermapTileImage(object):
     im = None               # Image object
     draw = None             # ImageDraw object
     font = None             # ImageFont object
+    lfont = None            # Line-drawing ImageFont object
     bg = (0, 0, 0, 255)     # RGBA bg color
     rmode = 'text'          # Render mode (text, tiles, vector)
     single = False          # Single-tile mode (when enabled, removes outer padding)
-    fpadding = 4            # Text mode: Font glyph padding
+    fpadding = 4            # Text mode: outer glyph padding
+    fpad_bot = 4            # Text mode: inner bottom glyph pad
+    fpad_left = 0           # Text mode: inner left glyph pad
     t_w = 0                 # OM Tile width
     t_h = 0                 # OM Tile height
     i_w = 0                 # Image width
@@ -52,6 +55,8 @@ class OvermapTileImage(object):
 
         try:
             self.font = ImageFont.FreeTypeFont(fontpath, size=fontsize)
+            #self.lfont = self.font.font_variant(size=int(fontsize + 2))
+            self.lfont = self.font.font_variant(size=(fontsize - 2))
             logger.debug("using font: %s (%s)", *self.font.getname())
         except Exception as e:
             logger.error("failed to open font '%s': %s", fontpath, str(e))
@@ -78,13 +83,14 @@ class OvermapTileImage(object):
         self.im = Image.new('RGBA', (self.i_w, self.i_h), self.bg)
         self.draw = ImageDraw.Draw(self.im)
 
-    def plot_tile(self, x, y, txt, fg, bg):
+    def plot_tile(self, x, y, txt, fg, bg, line=False):
         """
         Draw single char/tile on overmap
 
         @x and @y are overmap coordinates
         @txt is map symbol
         @fg and @bg are (r,g,b) tuples
+        If @line is true, alternate font is used
         """
         tx_x = x * (self.f_w + self.fpadding)
         tx_y = y * (self.f_h + self.fpadding)
@@ -93,9 +99,17 @@ class OvermapTileImage(object):
         bg_x2 = (x + 1) * (self.f_w + self.fpadding)
         bg_y2 = (y + 1) * (self.f_h + self.fpadding)
 
+        # Use alternate font if line=True
+        if line:
+            tfont = self.font
+        else:
+            tx_x += self.fpad_left
+            tx_y -= self.fpad_bot
+            tfont = self.lfont
+
         if bg is not None:
             self.draw.rectangle(((bg_x1, bg_y1), (bg_x2, bg_y2)), fill=bg)
-        self.draw.text((tx_x, tx_y), txt, fill=fg, font=self.font)
+        self.draw.text((tx_x, tx_y), txt, fill=fg, font=tfont)
 
     def save_image(self, filename):
         """
